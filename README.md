@@ -30,3 +30,13 @@ Template project for setting up [jnigen](https://github.com/libgdx/libgdx/wiki/j
 - `./gradlew jnigen` will run jnigen and build natives.
 - `./gradlew jnigenDev` will run jnigen and build natives for linux64 only.
 - `./gradlew runTest` will run the `JnigenDemoTest` java class with the build natives in classpath.
+
+# Setup
+
+- Ant is required to be on path.
+- mingw (i686 and x86_64) is required to be on path.
+- Android requires a populated `NDK_HOME` environment variable pointing to the NDK.
+
+# Docker
+
+- A dockerfile which sets up an environment for you can be found [here](https://github.com/PokeMMO/gdx-docker)
