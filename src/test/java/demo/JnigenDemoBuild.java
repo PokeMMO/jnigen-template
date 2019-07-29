@@ -28,15 +28,15 @@ public class JnigenDemoBuild
 		BuildTarget win32 = BuildTarget.newDefaultTarget(TargetOs.Windows, false);
 		win32.cppIncludes = cppIncludes;
 		win32.headerDirs = headers;
-		win32.cFlags += " -fvisibility=hidden -ffunction-sections -fdata-sections ";
-		win32.cppFlags += " -fvisibility=hidden -ffunction-sections -fdata-sections ";
+		win32.cFlags += " -fvisibility=hidden ";
+		win32.cppFlags += " -fvisibility=hidden ";
 		win32.linkerFlags += " -fvisibility=hidden ";
 		win32.cIncludes = cIncludes;
 		BuildTarget win64 = BuildTarget.newDefaultTarget(TargetOs.Windows, true);
 		win64.cppIncludes = cppIncludes;
 		win64.headerDirs = headers;
-		win64.cFlags += " -fvisibility=hidden -ffunction-sections -fdata-sections ";
-		win64.cppFlags += " -fvisibility=hidden -ffunction-sections -fdata-sections ";
+		win64.cFlags += " -fvisibility=hidden ";
+		win64.cppFlags += " -fvisibility=hidden ";
 		win64.linkerFlags += " -fvisibility=hidden ";
 		win64.cIncludes = cIncludes;
 		
