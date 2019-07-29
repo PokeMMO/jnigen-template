@@ -1,0 +1,94 @@
+apply plugin: "java"
+apply plugin: "eclipse"
+apply plugin: "idea"
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+ext {
+    gdxVersion = '1.9.10'
+    libraryName = 'demo'
+    nativesDesktop = ["libs/linux32/lib${libraryName}.so",
+                      "libs/linux64/lib${libraryName}64.so",
+                      "libs/linuxarm32/lib${libraryName}arm.so",
+                      "libs/linuxarm64/lib${libraryName}arm64.so",
+                      "libs/windows32/${libraryName}.dll",
+                      "libs/windows64/${libraryName}64.dll",
+                      "libs/macosx64/lib${libraryName}64.dylib"]
+    nativesAndroid = ['arm64-v8a', 'armeabi-v7a', 'armeabi', 'x86_64', 'x86']
+}
+
+version = '1.0.0'
+
+clean.doFirst {
+    delete "${rootDir}/libs/"
+    println "Cleaning: Deleting ${rootDir}/libs/"
+    delete "${rootDir}/obj/"
+    println "Cleaning: Deleting ${rootDir}/obj/"
+}
+
+task jnigen(type:JavaExec) {
+    main = "demo.JnigenDemoBuild"
+    classpath = sourceSets.test.runtimeClasspath
+}
+
+//Only builds linux64
+task jnigenDev(type:JavaExec) {
+    main = "demo.JnigenDemoBuild"
+    classpath = sourceSets.test.runtimeClasspath
+    args('dev')
+}
+
+task jarNativesDesktop(type: Jar) {
+    archiveClassifier = "natives-desktop"
+    
+    from(nativesDesktop) {
+        into ""
+    }
+    
+    outputs.upToDateWhen { false }
+}
+
+task jarNativesAndroid() {
+    nativesAndroid.each { id ->
+        task "jarNativesAndroid${id}"(type: Jar) {
+            archiveClassifier = "natives-${id}"
+            from("libs/${id}") {
+                into ""
+            }
+        }
+    
+        jarNativesAndroid.dependsOn "jarNativesAndroid${id}"
+    }
+}
+
+task runTest(dependsOn: jarNativesDesktop, type: JavaExec) {
+    classpath = files("build/libs/${rootProject.name}-${version}-natives-desktop.jar")
+    classpath += sourceSets.test.runtimeClasspath
+    main = "demo.JnigenDemoTest"
+}
+
+task dist(type: GradleBuild) {
+    tasks = ['clean', 'jnigen', 'jar', 'jarNativesDesktop', 'jarNativesAndroid']
+}
+
+
+dependencies {
+    testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    testImplementation "com.badlogicgames.gdx:gdx-jnigen:$gdxVersion"
+    testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+}
+
+apply from: 'publish.gradle'
