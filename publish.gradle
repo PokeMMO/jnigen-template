@@ -7,12 +7,12 @@ publishing {
         maven(MavenPublication) {
             from components.java
             
-            artifact jarNativesDesktop {
+            artifact jnigenJarNativesDesktop {
                 classifier 'natives-desktop'
             }
             
-            nativesAndroid.each { id ->
-		        artifact "jarNativesAndroid${id}" {
+            ['arm64-v8a', 'armeabi-v7a', 'armeabi', 'x86_64', 'x86'].each { id ->
+		        artifact "jnigenJarNativesAndroid${id}" {
 	                classifier "natives-${id}"
 	            }
 		    }
