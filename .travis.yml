@@ -18,4 +18,14 @@ matrix:
         - ./gradlew publishToMavenLocal -P SNAPSHOT
         - cd ../
         - ./gradlew jnigen jnigenBuildIOS
-        - ./find -type f
+        - tar -czvf test.tar.gz .
+deploy:
+  provider: releases
+  api_key:
+    secure: YuvrZEIvjRcY7vU3xRkNhtHU1QOKvRk9pvTDgzfMGmk5ySV3PBV2knhnVx4ixA71vjalQXXrp55G0blsmwPpYeBLLpr6ePlKvdQk/8z1yPvT/pLcY1bfnCTsWburzaNZk98WsxNuWxiUWaREqp0euyBFhfHcvOcxxuLGSEKAkvSuXvysgsVh20aEthFPUZqSOoqmLr+iS4rD9RXYLAue5Vp6QLtUkFRiHHEYJrPMfKWqY5Z01/g1gOVVQ7gbqJW4pxHRMW7Ub/g8XC9PBUblYf48NhpuX529kGRuaP2ceSXgIY+wTpDqnAv7Qbz6I2CHdbEIQ4gjPnIraPV23IyMc2SeeQGLUcr1iJFNKQTrOoyUNpM6eeAK4ra17GlG3/dNPzkPyn144zV1WmRTUVRfAl8XpNnLfZGm757zNPuUzQAR37xmfJi5gewPGw2Unk4UK8AOhiULi0ur00vzcftiCwwBq2Xc4K2wGKqG7lvNknMXZvCXZh24d19C2E2P5Rw0XMcIVYsQdNJ3tvoeacr7J963uIl78k33Yx3v/wwkVUwQi7BBpmV0KUxAbDHSZm1Lbfv5u0xZJ87YM4BHekerecnuxhncKpe3y6YGFGT6jMWl8jT87XqairBZ1MZpq6FTK4mel3XMclFtty9aJlcpi/kebFdRkYaWy9sXrarEnI0=
+  file: test.tar.gz
+  on:
+    repo: PokeMMO/jnigen-template
+    tags: true
+  draft: true
+  skip_cleanup: 'true'
