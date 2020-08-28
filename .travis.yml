@@ -1,0 +1,21 @@
+sudo: true
+git:
+  depth: 1
+
+matrix:
+  include:
+    - name: "Mac IOS Build"
+      language: java
+      os: osx
+      before_install:
+        - brew update
+        - brew install ant
+      install:
+        - true
+      script:
+        - git clone https://github.com/PokeMMO/gdx-jnigen.git --depth 1
+        - cd gdx-jnigen
+        - ./gradlew publishToMavenLocal -P SNAPSHOT
+        - cd ../
+        - ./gradlew jnigen jnigenBuildIOS
+        - ./find -type f
