@@ -13,8 +13,8 @@ apply plugin: "eclipse"
 apply plugin: "idea"
 apply plugin: "com.badlogicgames.gdx.gdx-jnigen"
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenLocal()
