@@ -1,0 +1,46 @@
+git:
+  depth: 3
+env:
+  global:
+  - ORG_GRADLE_PROJECT_GITHUB_USERNAME: "PokeMMO"
+  - secure: GpbXWboLg4owVFaNq89uAy+JkbNIAGShrVLPIGFj8Sd8Hits0OP3bTTfBE2xUw6QcuKf/J98vGr4vV1vfxiKQ5nzkltOOFN9KuVdpO70AAxVQ2zc9qCmXzM/0o0NzJy8eMvHC+dKKEyQokX1WOH3kF2GWBr0PHc/c3LuKUyWszn7ZGKwaLflKjRwEa0OZGJ5aAToBwedM/2YoailfXCtromGnjtlkKsk3eHybZJ0qlY0HOztGP+264wPLz1rgcRr0C/GsM4uJHNaB3/HoFMGo1kSqV1Un0gPIx3Ip9e0ZO9mFZF84TmjpZKZYqnyvBPK8RmnQf3kTvvnaEjMPlGbJ81uF7Hb1F8lpIGHiPNmcsSDa879Fu1GHxiiuiWoieLLPk6eReOGFyLdMJ5TnJ/gTmCec/bY1aZ/wBKJlcIE7NWOVVlG4m5BYq0R7N0mpWLbZGB/g8pPwFPeAwKpHrkGaGhXXg/FyQR854TgBbVWp+ATuOHl7cdyNFxFc+f9jAa8SmwUjrZtbhKI6RDM9pegLwlfxaUNa+yLOUFjOUQoPHuh35TIUFcwjhLo3Kk/E4L4ZvRdipEvawbo59Gc65D7rgiLau6UsjDvjlb/yGaFGu2F+qZvLeJqSZQsWbQYxqyWI+CjTfikbGSrrBz46tZ9zeTwdyt7dYv0Q0eW0IZsWZc=
+
+matrix:
+  include:
+    - name: "Mac IOS Build"
+      language: java
+      os: osx
+      before_install:
+        - brew update
+        - brew install ant
+      install:
+        - true
+      script:
+        - git clone https://github.com/PokeMMO/gdx-jnigen.git --depth 1
+        - cd gdx-jnigen
+        - ./gradlew publishToMavenLocal -P SNAPSHOT
+        - cd ../
+        - ./gradlew jnigen jnigenBuildIOS publishMacosPublicationToGithubRepository
+
+    - name: "Main Linux Build"
+      language: java
+      os: linux
+      dist: xenial
+      compiler: gcc
+      before_install:
+        - sudo sed -i 's/deb http/deb [arch=amd64,i386] http/' /etc/apt/sources.list
+        - sudo grep "ubuntu.com/ubuntu" /etc/apt/sources.list | sudo tee /etc/apt/sources.list.d/ports.list
+        - sudo sed -i 's/amd64,i386/armhf,arm64/' /etc/apt/sources.list.d/ports.list
+        - sudo sed -i 's#http://.*/ubuntu#http://ports.ubuntu.com/ubuntu-ports#' /etc/apt/sources.list.d/ports.list
+        - sudo dpkg --add-architecture armhf
+        - sudo dpkg --add-architecture arm64
+        - sudo apt-get update || true
+        - sudo apt-get -yq install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+      install:
+        - true
+      script:
+        - git clone https://github.com/PokeMMO/gdx-jnigen.git --depth 1
+        - cd gdx-jnigen
+        - ./gradlew publishToMavenLocal -P SNAPSHOT
+        - cd ../
+        - ./gradlew jnigen jnigenBuild publishMainPublicationToGithubRepository
