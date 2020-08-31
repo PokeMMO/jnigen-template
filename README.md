@@ -17,11 +17,6 @@ Template project for setting up [jnigen](https://github.com/libgdx/libgdx/wiki/j
 * Publish artifact group name
   - `publish.gradle` contains group 'demo.jnigen' used when publishing maven artifacts.
 
-# TODO (PR's welcome)
-
-* Better support for macOS when not cross-compiling.
-* Better support for iOS. Currently is not even published in any artifacts.
-
 # How to use
 
 - `./gradlew jnigen` Generates jnigen native code files and build scripts.
@@ -37,6 +32,6 @@ Template project for setting up [jnigen](https://github.com/libgdx/libgdx/wiki/j
 - mingw (i686 and x86_64) is required to be on path.
 - Android requires a populated `NDK_HOME` environment variable pointing to the NDK.
 
-# Docker
+# Github Actions
 
-- A dockerfile which sets up an environment for you can be found [here](https://github.com/PokeMMO/gdx-docker)
+- A fully functional Github Action is setup to build Windows/Linux/macOS/Android/iOS and publish to maven.
