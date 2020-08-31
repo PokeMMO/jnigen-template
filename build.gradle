@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         mavenLocal()
         mavenCentral()
     }
@@ -25,7 +26,7 @@ ext {
     gdxVersion = '1.9.10'
 }
 
-version = '1.0.0'
+version = '1.0.2-SNAPSHOT'
 
 jnigen {
     sharedLibName = "demo"
