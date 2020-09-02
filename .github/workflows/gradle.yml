@@ -13,6 +13,14 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
@@ -36,6 +44,14 @@ jobs:
       NDK_HOME: /usr/local/lib/android/sdk/ndk-bundle
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
@@ -44,12 +60,17 @@ jobs:
     - run: sudo grep "ubuntu.com/ubuntu" /etc/apt/sources.list | sudo tee /etc/apt/sources.list.d/ports.list
     - run: sudo sed -i 's/amd64,i386/armhf,arm64/' /etc/apt/sources.list.d/ports.list
     - run: sudo sed -i 's#http://.*/ubuntu#http://ports.ubuntu.com/ubuntu-ports#' /etc/apt/sources.list.d/ports.list
-    - run: sudo dpkg --add-architecture armhf
-    - run: sudo dpkg --add-architecture arm64
+    - name: Add extra platform architectures
+      run: sudo dpkg --add-architecture i386; sudo dpkg --add-architecture armhf; sudo dpkg --add-architecture arm64
     - run: sudo apt-get update || true
-    - run: sudo apt-get -yq install gcc-multilib g++-multilib g++-mingw-w64-i686 g++-mingw-w64-x86-64
-    - run: sudo apt-get -yq install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf binutils-arm-linux-gnueabihf
-    - run: sudo apt-get -yq install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
+    - name: Install Windows compilers
+      run: sudo apt-get -yq install g++-mingw-w64-i686 g++-mingw-w64-x86-64
+    - name: Install Linux x86 compilers/libraries
+      run: sudo apt-get -yq install gcc-multilib g++-multilib linux-libc-dev:i386 libstdc++-5-dev:i386
+    - name: Install Linux arm32 compilers/libraries
+      run: sudo apt-get -yq install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf binutils-arm-linux-gnueabihf
+    - name: Install Linux arm64 compilers/libraries
+      run: sudo apt-get -yq install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
     - name: Download macOS/iOS natives
       uses: actions/download-artifact@v2.0.5
       with:
