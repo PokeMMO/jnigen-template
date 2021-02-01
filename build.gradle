@@ -1,29 +1,39 @@
 buildscript {
     repositories {
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         mavenLocal()
         mavenCentral()
     }
     dependencies {
-        classpath "com.badlogicgames.gdx:gdx-jnigen-gradle:2.0.0-SNAPSHOT"
+        classpath "com.badlogicgames.gdx:gdx-jnigen-gradle:2.0.1"
     }
 }
-
-apply plugin: "java"
-apply plugin: "eclipse"
-apply plugin: "idea"
-apply plugin: "com.badlogicgames.gdx.gdx-jnigen"
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 repositories {
     mavenLocal()
     mavenCentral()
 }
 
-ext {
-    gdxVersion = '1.9.10'
+apply plugin: "java-library"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "com.badlogicgames.gdx.gdx-jnigen"
+
+dependencies {
+    testImplementation "com.badlogicgames.gdx:gdx-jnigen-loader:2.0.1"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test) {
+   systemProperty 'file.encoding', 'UTF-8'
 }
 
 version = '1.0.2-SNAPSHOT'
@@ -54,10 +64,6 @@ task runTest(dependsOn: jnigenJarNativesDesktop, type: JavaExec) {
     main = "demo.JnigenDemoTest"
     args jnigen.sharedLibName
 }
-
-dependencies {
-    testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-    testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-}
+test.dependsOn runTest
 
 apply from: 'publish.gradle'
